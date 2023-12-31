@@ -1,0 +1,84 @@
+python -m venv venv
+.\venv\Scripts\activate
+pip install django
+
+django-admin startproject project_name
+python manage.py startapp app_name
+python manage.py runserver
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+
+__________________________________________________
+
+project > settings.py >
+
+from . info import *
+
+EMAIL_USE_TLS = EMAIL_USE_TLS
+EMAIL_HOST = EMAIL_HOST
+EMAIL_HOST_USER = EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = EMAIL_HOST_PASSWORD
+EMAIL_PORT = EMAIL_PORT
+
+INSTALLED_APPS = [
+    'app_name1',
+    'app_name2',
+]
+
+TEMPLATES = [{'DIRS': [BASE_DIR/'templates'],},]
+STATICFILES_DIRS = [BASE_DIR/'static']
+
+__________________________________________________
+
+app > views.py >
+
+from django.shortcuts import render
+from django.http import HttpResponse
+def app1_vw1(request):
+    return HttpResponse('<h1> HELLO SOASH </h1>')
+
+def app_vw2(request):
+    return render(request, 'test.html')
+
+def app_vw3(request):
+    DATA = {'data':'Anything'}
+    return render(request, 'test2.html', context=DATA)
+__________________________________________________
+
+app > urls.py >
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('test1/', views.app_vw1),
+    path('test2/', views.app_vw2),
+]
+__________________________________________________
+
+project > urls.py > 
+
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('app.urls'))
+]
+__________________________________________________
+
+templates > all.html
+static > all.css, all.js
+__________________________________________________
+
+app > models.py
+class Table01(models.Model):
+    name = models.CharField(max_length=20)
+    age = models.IntegerField()
+
+app > admin.py
+from app.models import Table01
+class table_display(admin.ModelAdmin):
+    list_display = ('name','age')
+
+admin.site.register(Table01, table_display)
